@@ -17,6 +17,16 @@ jobs:
         id: var
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
+      - name: Access Api keys
+        env:
+          apiKey: ${{ secrets.API_KEY }}
+          path: app/src/main/res/values/secrets.xml
+        run: |
+          touch $path
+          echo \<resources\> >> $path
+          echo \<string name=\"google_maps_key\"\>$apiKey\</string\> >> $path
+          echo \</resources\> >> $path
+
       - name: Build APK
         run: bash ./gradlew assembleRelease
 
